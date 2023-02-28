@@ -6,6 +6,14 @@ import { userContext } from "../../Context/userContext";
 
 const Header = () => {
   const [redirect, setRedirect] = useState(false);
+  /**
+   * Update
+   * I corrected  api call (side Effect) outside a useEffect
+   * i.e the logout function
+   * by introducing a new state as a depency for the effect
+   *  */
+  // state to play as a depency for the logout Effect
+  const [signIn, setSignIn] = useState(false);
   const { userInfo, setUserInfo } = useContext(userContext);
   const username = userInfo?.username;
   useEffect(() => {
@@ -20,15 +28,21 @@ const Header = () => {
   }, []);
   const logout = (e) => {
     e.preventDefault();
-    fetch("http://localhost:4000/logout", {
-      credentials: "include",
-      method: "POST",
-    }).then((response) => {
-      if (response.ok) {
-        setRedirect(true);
-      }
-    });
+    setSignIn(true);
+    useEffect(() => {
+      fetch("http://localhost:4000/logout", {
+        credentials: "include",
+        method: "POST",
+      }).then((response) => {
+        if (response.ok) {
+          setRedirect(true);
+        }
+      });
+
+      return () => setSignIn(false);
+    }, [signIn]);
   };
+
   if (redirect) {
     return <Navigate to={"/login"} />;
   }
