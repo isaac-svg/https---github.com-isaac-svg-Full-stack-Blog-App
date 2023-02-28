@@ -45,7 +45,7 @@ const CreatePost = () => {
     data.set("summary", summary);
     data.set("file", file[0]);
     data.set("content", content);
-    e.preventDefault();
+    // e.preventDefault();
 
     fetch("http://localhost:4000/post", {
       credentials: "include",
