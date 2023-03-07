@@ -16,7 +16,7 @@ exports.register = async (req, res) => {
   }
 
   try {
-    const salt = await bcrypt.genSalt(Number(process.env.SALT));
+    const salt = await bcrypt.genSalt(Number(process.env.salt));
     const hashedPass = await bcrypt.hash(password, salt);
     const userDoc = await User.create({ username, password: hashedPass });
     // const { password, ...otherInfo } = userDoc;
@@ -40,7 +40,7 @@ exports.login = async function (req, res) {
     if (validUser) {
       const token = jwt.sign(
         { username: user.username, id: user._id },
-        process.env.JWT_SECRET
+        process.env.jwt_secret
       );
       console.log(token, "from registration");
       return res.cookie("token", token).json("ok");
@@ -59,7 +59,7 @@ exports.profile = async (req, res) => {
   const { token } = req.cookies;
   console.log(req.cookies, "cookies from profile from profile");
   try {
-    const userInfo = jwt.verify(token, process.env.JWT_SECRET);
+    const userInfo = jwt.verify(token, process.env.jwt_secret);
     console.log(userInfo, "userInfo");
     if (userInfo) {
       res.json(userInfo);

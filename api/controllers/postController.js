@@ -13,7 +13,7 @@ exports.create = async (req, res) => {
   try {
     const { token } = req.cookies;
 
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.jwt_secret);
     const post = await Post.create({
       title,
       summary,
@@ -30,7 +30,7 @@ exports.create = async (req, res) => {
 
 exports.logout = (req, res) => {
   const { token } = req.cookies;
-  const verifiedUser = jwt.verify(token, process.env.JWT_SECRET);
+  const verifiedUser = jwt.verify(token, process.env.jwt_secret);
   if (verifiedUser) {
     res.cookie("token", "").json("ok");
   }
@@ -67,7 +67,7 @@ exports.editPost = async (req, res) => {
   }
   const { token } = req.cookies;
   const { id, summary, content, title } = req.body;
-  const info = jwt.verify(token, process.env.JWT_SECRET);
+  const info = jwt.verify(token, process.env.jwt_secret);
   const postDoc = await Post.findById(id);
   console.log(postDoc);
   const isAuthor = JSON.stringify(info.id) === JSON.stringify(postDoc.author);
